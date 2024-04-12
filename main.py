@@ -22,5 +22,5 @@ def update(frame):
     return scat
 
 
-ani = animation.FuncAnimation(fig, update, frames=30, interval=30, repeat=False)
+ani = animation.FuncAnimation(fig, update, interval=30, repeat=False)
 plt.show()
