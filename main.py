@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+from collections import deque
 import serial
 
 
@@ -21,11 +22,11 @@ def get_dist():
 
 TDC_INNER_REF_CLK = 5  # in MHz
 
-ser = serial.Serial('COM6', 115200, timeout=1)
+ser = serial.Serial('COM5', 115200, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(projection='polar'))
 
-angle_data = []
-dist_data = []
+angle_data = deque(maxlen=100)
+dist_data = deque(maxlen=100)
 scat = ax.scatter(angle_data, dist_data, c='r', marker='^', label='scanned points', animated=True)
 
 ax.set_xticks(np.linspace(0, 2 * np.pi, 12, endpoint=False))
@@ -33,5 +34,6 @@ ax.set_yticks(np.arange(0, 4.0, 0.5))
 ax.set_title("Scan result of RangeFinder")
 fig.legend(loc='outside lower center')
 
-ani = animation.FuncAnimation(fig, update, interval=0.1, frames=10000, repeat=False, blit=True)
+ani = animation.FuncAnimation(fig, update, interval=1, frames=10000, repeat=False, blit=True)
 plt.show()
+ser.close()
