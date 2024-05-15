@@ -27,16 +27,16 @@ def read_data():
 
 TDC_INNER_REF_CLK = 5  # in MHz
 
-ser = serial.Serial('COM9', 115200, timeout=1)
+ser = serial.Serial('COM11', 921600, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(projection='polar'))
 
-angle_data = deque([0.0] * 100, maxlen=100)
-dist_data = deque([0.0] * 100, maxlen=100)
+angle_data = deque([0.0] * 300, maxlen=300)
+dist_data = deque([0.0] * 300, maxlen=300)
 scat = ax.scatter(angle_data, dist_data, c='r', marker='^', label='scanned points', animated=True)
 
 
 ax.set_xticks(np.linspace(0, 2 * np.pi, 12, endpoint=False))
-ax.set_yticks(np.arange(0.3, 1.3, 0.1))
+ax.set_yticks(np.arange(0.0, 1.5, 0.1))
 ax.set_title("Scan result of RangeFinder")
 fig.legend(loc='outside lower center')
 
