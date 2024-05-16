@@ -28,13 +28,14 @@ def read_data():
 
 
 TDC_INNER_REF_CLK = 5  # in MHz
-MIRROR_ANGLE_LIMIT = 40.0 / 180.0 * np.pi  # in radians
-MIRROR_FREQ = 80.0  # in Hz
+MIRROR_ANGLE_LIMIT_DEG = 40.0
+MIRROR_ANGLE_LIMIT_ARC = 40.0 / 180.0 * np.pi  # in radians
+MIRROR_FREQ = 77.43  # in Hz
 MEASURE_FREQ = 16666.6  # in Hz
 iterate_counter = 0
 
-SAMPLE_VALUES = np.linspace(-np.sin(MIRROR_ANGLE_LIMIT), np.sin(MIRROR_ANGLE_LIMIT),  int(MEASURE_FREQ / MIRROR_FREQ))
-ANGLE_VALUES = np.arcsin(SAMPLE_VALUES)
+SAMPLE_VALUES = np.linspace(-np.sin(MIRROR_ANGLE_LIMIT_ARC), np.sin(MIRROR_ANGLE_LIMIT_ARC), int(MEASURE_FREQ / MIRROR_FREQ))
+ANGLE_VALUES = 2 * np.arcsin(SAMPLE_VALUES)
 
 ser = serial.Serial('COM11', 921600, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(projection='polar'))
@@ -45,6 +46,10 @@ scat = ax.scatter(angle_data, dist_data, c='r', marker='^', label='scanned point
 
 ax.set_xticks(np.linspace(0, 2 * np.pi, 12, endpoint=False))
 ax.set_yticks(np.arange(0.0, 1.5, 0.1))
+ax.set_thetamax(2 * MIRROR_ANGLE_LIMIT_DEG)
+ax.set_thetamin(-2 * MIRROR_ANGLE_LIMIT_DEG)
+ax.set_theta_direction(-1)
+ax.set_theta_offset(np.pi / 2)
 ax.set_title("Scan result of RangeFinder")
 fig.legend(loc='outside lower center')
 
