@@ -5,6 +5,7 @@ import numpy as np
 def get_data(ser: Serial):
     """
     retrieve one frame data from serial port
+    :param ser: the serial port to read from
     :return: (angle from fast axis, angle from slow axis, dist)
     """
     while True:
