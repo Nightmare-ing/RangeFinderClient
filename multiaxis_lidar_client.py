@@ -1,3 +1,4 @@
+import serial
 from serial import Serial
 import numpy as np
 
@@ -34,3 +35,9 @@ def process_data(data_frame: bytes):
 
 BEGIN_CHECK_CODE = 'aa'  # start check code in hexadecimal
 END_CHECK_CODE = 'aa'  # end check code in hexadecimal
+
+ser = serial.Serial('/dev/tty.usbserial-13130', 3000000, timeout=1)
+for _ in range(100):
+    print(get_data(ser))
+
+ser.close()
