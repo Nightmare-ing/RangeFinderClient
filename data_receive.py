@@ -23,15 +23,19 @@ def process_data(data_frame: bytes):
     process one frame raw data
     :param data_frame: 8 bytes data containing two bytes angle data from
     fast axis, two bytes angle data from slow axis, and two bytes data of
-    dist in float form
-    :return: (angle from fast axis, angle from slow axis, dist)
+    dist in float form, in the sphere coordinates system
+    :return: cartesian coordinates (x, y, z)
     """
     print(data_frame)
     fast_axis_angle = int.from_bytes(data_frame[1:3])
     slow_axis_angle = int.from_bytes(data_frame[3:5])
     dist = float(np.array([int.from_bytes(data_frame[5:-1])],
                           dtype=np.uint16).view(np.float16)[0])
-    return fast_axis_angle, slow_axis_angle, dist
+
+    x = dist * np.sin(slow_axis_angle) * np.cos(fast_axis_angle)
+    y = dist * np.sin(slow_axis_angle) * np.sin(fast_axis_angle)
+    z = dist * np.cos(slow_axis_angle)
+    return x, y, z
 
 
 BEGIN_CHECK_CODE = 'aa'  # start check code in hexadecimal
