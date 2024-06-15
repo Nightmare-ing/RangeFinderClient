@@ -31,23 +31,32 @@ def update_figure(frame):
     :param frame: one frame for the figure
     :return: updated artists
     """
-    scat.set_offsets(np.stack([x, y, z], axis=1))
-    return [scat,]
+    ax.figure.canvas.restore_region(background)
+    scat._offsets3d = (x, y, z)
+    ax.draw_artist(scat)
+    ax.figure.canvas.blit(ax.figure.bbox)
 
 
 # ser = serial.Serial('/dev/tty.usbserial-13130', 3000000, timeout=1)
-fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(projection='3d'))
+fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
+    projection='3d'))
 
 x = deque([0.0] * 500, maxlen=500)
 y = deque([0.0] * 500, maxlen=500)
 z = deque([0.0] * 500, maxlen=500)
 scat = ax.scatter(x, y, z, c='r', marker='^', label='scanned points')
+ax.set_xlim(-5.0, 5.0)
+ax.set_ylim(-5.0, 5.0)
+ax.set_zlim(-5.0, 5.0)
+
+ax.figure.canvas.draw()
+background = ax.figure.canvas.copy_from_bbox(ax.figure.bbox)
 
 read_data_thread = threading.Thread(target=read_data, daemon=True)
 read_data_thread.start()
 
 ani = animation.FuncAnimation(fig, update_figure, interval=1,
-                              repeat=False, blit=True)
+                              repeat=False)
 plt.show()
 read_data_thread.join()
 # ser.close()
