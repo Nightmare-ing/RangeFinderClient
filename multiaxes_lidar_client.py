@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from collections import deque
 import threading
 import matplotlib.animation as animation
+from BlitManager import *
 
 
 def read_data():
@@ -12,10 +13,10 @@ def read_data():
     thread function for pushing one frame data into the deque continuously
     """
     while True:
-        # fast_axis_angle, slow_axis_angle, dist = get_data(ser)
-        fast_axis_angle = np.random.uniform(0.0, 2*np.pi)
-        slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
-        dist = np.random.uniform(0.0, 5.0)
+        fast_axis_angle, slow_axis_angle, dist = get_data(ser)
+        # fast_axis_angle = np.random.uniform(0.0, 2*np.pi)
+        # slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
+        # dist = np.random.uniform(0.0, 5.0)
 
         x_data = dist * np.sin(slow_axis_angle) * np.cos(fast_axis_angle)
         y_data = dist * np.sin(slow_axis_angle) * np.sin(fast_axis_angle)
@@ -31,13 +32,12 @@ def update_figure(frame):
     :param frame: one frame for the figure
     :return: updated artists
     """
-    ax.figure.canvas.restore_region(background)
     scat._offsets3d = (x, y, z)
-    ax.draw_artist(scat)
-    ax.figure.canvas.blit(ax.figure.bbox)
+    bm.update()
+    return [scat,]
 
 
-# ser = serial.Serial('/dev/tty.usbserial-13130', 3000000, timeout=1)
+ser = serial.Serial('/dev/tty.usbserial-13130', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
     projection='3d'))
 
@@ -49,8 +49,7 @@ ax.set_xlim(-5.0, 5.0)
 ax.set_ylim(-5.0, 5.0)
 ax.set_zlim(-5.0, 5.0)
 
-ax.figure.canvas.draw()
-background = ax.figure.canvas.copy_from_bbox(ax.figure.bbox)
+bm = BlitManager(fig.canvas, [scat,])
 
 read_data_thread = threading.Thread(target=read_data, daemon=True)
 read_data_thread.start()
@@ -59,6 +58,6 @@ ani = animation.FuncAnimation(fig, update_figure, interval=1,
                               repeat=False)
 plt.show()
 read_data_thread.join()
-# ser.close()
+ser.close()
 
 
