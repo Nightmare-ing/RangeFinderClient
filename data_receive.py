@@ -26,11 +26,14 @@ def process_data(data_frame: bytes):
     dist in float form
     :return: (angle from fast axis, angle from slow axis, dist)
     """
-    print(data_frame)
-    fast_axis_angle = int.from_bytes(data_frame[1:3])
-    slow_axis_angle = int.from_bytes(data_frame[3:5])
-    dist = float(np.array([int.from_bytes(data_frame[5:-1])],
-                          dtype=np.uint16).view(np.float16)[0])
+    # print(data_frame)
+    fast_axis_angle = (int.from_bytes(data_frame[1:2]) + int.from_bytes(data_frame[2:3]) * 256) / 4 / 4096 * 3.3
+    slow_axis_angle = (int.from_bytes(data_frame[3:4]) + int.from_bytes(data_frame[4:5]) * 256) / 4 / 4096 * 3.3
+    dist = int.from_bytes(data_frame[5:6]) + int.from_bytes(data_frame[6:7])
+
+    fast_axis_angle = (fast_axis_angle - 1.65) / 2.475 * np.pi / 12.0
+    slow_axis_angle = (slow_axis_angle - 1.65) / 2.475 * np.pi / 12.0
+    dist = dist / 100.0
 
     return fast_axis_angle, slow_axis_angle, dist
 
