@@ -18,9 +18,10 @@ def read_data():
         # slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
         # dist = np.random.uniform(0.0, 5.0)
 
-        x_data = dist * np.sin(slow_axis_angle) * np.cos(fast_axis_angle)
-        y_data = dist * np.sin(slow_axis_angle) * np.sin(fast_axis_angle)
-        z_data = dist * np.cos(slow_axis_angle)
+        x_data = dist * np.cos(slow_axis_angle) * np.sin(fast_axis_angle)
+        y_data = dist * np.cos(slow_axis_angle) * np.cos(fast_axis_angle)
+        z_data = dist * np.sin(slow_axis_angle)
+        # print(x_data, y_data, z_data)
         x.append(x_data)
         y.append(y_data)
         z.append(z_data)
@@ -37,17 +38,17 @@ def update_figure(frame):
     return [scat,]
 
 
-ser = serial.Serial('/dev/tty.usbserial-13130', 3000000, timeout=1)
+ser = serial.Serial('/dev/tty.usbserial-1310', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
     projection='3d'))
 
-x = deque([0.0] * 500, maxlen=500)
-y = deque([0.0] * 500, maxlen=500)
-z = deque([0.0] * 500, maxlen=500)
+x = deque([0.0] * 200, maxlen=200)
+y = deque([0.0] * 200, maxlen=200)
+z = deque([0.0] * 200, maxlen=200)
 scat = ax.scatter(x, y, z, c='r', marker='^', label='scanned points')
-ax.set_xlim(-5.0, 5.0)
-ax.set_ylim(-5.0, 5.0)
-ax.set_zlim(-5.0, 5.0)
+ax.set_xlim(0.0, 2.0)
+ax.set_ylim(0.0, 2.0)
+ax.set_zlim(-2.0, 2.0)
 
 bm = BlitManager(fig.canvas, [scat,])
 
