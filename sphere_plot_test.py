@@ -8,6 +8,12 @@ x = np.random.standard_normal(100)
 y = np.random.standard_normal(100)
 z = np.random.standard_normal(100)
 scatter = ax.scatter(x, y, z)
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.set_zlabel('z')
+ax.view_init(elev=20, azim=45)
+ax.set_xlim([5, 0])
+ax.set_ylim([5, 0])
 ax.figure.canvas.draw()  # initial draw to setup the rendering context
 background = ax.figure.canvas.copy_from_bbox(ax.figure.bbox)  # copy background
 def update(frame):
