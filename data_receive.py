@@ -23,8 +23,8 @@ def process_data(data_frame: bytes):
     process one frame raw data
     :param data_frame: 8 bytes data containing two bytes angle data from
     fast axis, two bytes angle data from slow axis, and two bytes data of
-    dist in float form
-    :return: (angle from fast axis, angle from slow axis, dist)
+    dist, all in uint16 type
+    :return: (angle from fast axis, angle from slow axis, dist in m)
     """
     # print(data_frame)
     fast_axis_angle = (int.from_bytes(data_frame[1:2]) + int.from_bytes(data_frame[2:3]) * 256) / 4 / 4096 * 3.3
