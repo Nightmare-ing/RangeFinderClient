@@ -18,6 +18,10 @@ def read_data():
         # slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
         # dist = np.random.uniform(0.0, 5.0)
 
+        # if the distance is larger than 20, abandon this data
+        if dist > 20:
+            continue
+
         x_data = dist * np.cos(slow_axis_angle) * np.sin(fast_axis_angle)
         y_data = dist * np.cos(slow_axis_angle) * np.cos(fast_axis_angle)
         z_data = dist * np.sin(slow_axis_angle)
