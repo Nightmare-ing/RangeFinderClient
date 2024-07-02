@@ -18,8 +18,8 @@ def read_data():
         # slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
         # dist = np.random.uniform(0.0, 5.0)
 
-        # if the distance is larger than 20, abandon this data
-        if dist > 20:
+        # if the distance is larger than MAX_DIST, abandon this data
+        if dist > MAX_DIST:
             continue
 
         x_data = dist * np.cos(slow_axis_angle) * np.sin(fast_axis_angle)
@@ -29,6 +29,7 @@ def read_data():
         x.append(x_data)
         y.append(y_data)
         z.append(z_data)
+        colors.append(dist)
 
 
 def update_figure(frame):
@@ -38,9 +39,11 @@ def update_figure(frame):
     :return: updated artists
     """
     scat._offsets3d = (x, y, z)
+    scat.set_array(colors)  # update the color of each scattered point
     bm.update()
     return [scat,]
 
+MAX_DIST = 20.0
 
 ser = serial.Serial('/dev/tty.usbserial-1310', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
@@ -49,7 +52,10 @@ fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
 x = deque([0.0] * 200, maxlen=200)
 y = deque([0.0] * 200, maxlen=200)
 z = deque([0.0] * 200, maxlen=200)
-scat = ax.scatter(x, y, z, c='r', marker='^', label='scanned points')
+colors = deque([0.0] * 200, maxlen=200)
+scat = ax.scatter(x, y, z, c=colors, cmap='viridis',
+                  norm=plt.Normalize(0, MAX_DIST), marker='o',
+                  label='scanned points')
 ax.set_xlim(2.0, 0.0)
 ax.set_ylim(2.0, 0.0)
 ax.set_zlim(-2.0, 2.0)
