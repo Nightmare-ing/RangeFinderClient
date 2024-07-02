@@ -1,3 +1,4 @@
+import serial
 import threading
 from collections import deque
 
@@ -16,7 +17,7 @@ def read_data():
         fast_axis_angle, slow_axis_angle, dist = get_data(ser)
         # fast_axis_angle = np.random.uniform(0.0, 2 * np.pi)
         # slow_axis_angle = np.random.uniform(0.0, np.pi / 2.0)
-        # dist = np.random.uniform(0.0, 5.0)
+        # dist = np.random.uniform(0.0, MAX_DIST)
 
         # if the distance is larger than MAX_DIST, abandon this data
         if dist > MAX_DIST:
