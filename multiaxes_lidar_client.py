@@ -1,11 +1,11 @@
-import numpy as np
-import serial
-from data_receive import *
-import matplotlib.pyplot as plt
-from collections import deque
 import threading
+from collections import deque
+
 import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+
 from BlitManager import *
+from data_receive import *
 
 
 def read_data():
@@ -14,8 +14,8 @@ def read_data():
     """
     while True:
         fast_axis_angle, slow_axis_angle, dist = get_data(ser)
-        # fast_axis_angle = np.random.uniform(0.0, 2*np.pi)
-        # slow_axis_angle = np.random.uniform(0.0, np.pi/2.0)
+        # fast_axis_angle = np.random.uniform(0.0, 2 * np.pi)
+        # slow_axis_angle = np.random.uniform(0.0, np.pi / 2.0)
         # dist = np.random.uniform(0.0, 5.0)
 
         # if the distance is larger than MAX_DIST, abandon this data
@@ -41,7 +41,8 @@ def update_figure(frame):
     scat._offsets3d = (x, y, z)
     scat.set_array(colors)  # update the color of each scattered point
     bm.update()
-    return [scat,]
+    return [scat, ]
+
 
 MAX_DIST = 20.0
 
@@ -64,7 +65,7 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 ax.view_init(elev=20, azim=45)
 
-bm = BlitManager(fig.canvas, [scat,])
+bm = BlitManager(fig.canvas, [scat, ])
 
 read_data_thread = threading.Thread(target=read_data, daemon=True)
 read_data_thread.start()
@@ -74,5 +75,3 @@ ani = animation.FuncAnimation(fig, update_figure, interval=1,
 plt.show()
 read_data_thread.join()
 ser.close()
-
-
