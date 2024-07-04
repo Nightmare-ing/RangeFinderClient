@@ -17,10 +17,10 @@ def read_data():
     """
     global data
     while True:
-        # fast_axis_angle, slow_axis_angle, dist = get_data(ser)
-        fast_axis_angle = np.random.uniform(0.0, 2 * np.pi)
-        slow_axis_angle = np.random.uniform(0.0, np.pi / 2.0)
-        dist = np.random.uniform(0.0, MAX_DIST)
+        fast_axis_angle, slow_axis_angle, dist = get_data(ser)
+        # fast_axis_angle = np.random.uniform(0.0, 2 * np.pi)
+        # slow_axis_angle = np.random.uniform(0.0, np.pi / 2.0)
+        # dist = np.random.uniform(0.0, MAX_DIST)
 
         # if the distance is larger than MAX_DIST, abandon this data
         if dist > MAX_DIST:
@@ -53,7 +53,7 @@ def update_figure(frame):
 MAX_DIST = 2.0
 NUM_POINTS_ON_VIEW = 100
 
-# ser = serial.Serial('/dev/tty.usbserial-1310', 3000000, timeout=1)
+ser = serial.Serial('/dev/tty.usbserial-1310', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
     projection='3d'))
 
@@ -83,4 +83,4 @@ ani = animation.FuncAnimation(fig, update_figure, interval=1,
                               repeat=False)
 plt.show()
 read_data_thread.join()
-# ser.close()
+ser.close()
