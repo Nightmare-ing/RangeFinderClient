@@ -59,4 +59,5 @@ class BlitManager:
             # draw all the animated artists
             self._draw_animated()
             # update the GUI state
-            cv.blit(fig.bbox)
+            # cv.blit(fig.bbox)
+        # cv.flush_events()
