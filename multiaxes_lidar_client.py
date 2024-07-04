@@ -52,10 +52,10 @@ def update_figure(frame):
     return [scat, ]
 
 
-MAX_DIST = 2.0
-NUM_POINTS_ON_VIEW = 100
+MAX_DIST = 7.0
+NUM_POINTS_ON_VIEW = 500
 
-ser = serial.Serial('/dev/tty.usbserial-1310', 3000000, timeout=1)
+ser = serial.Serial('/dev/tty.usbserial-13340', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
     projection='3d'))
 
@@ -65,12 +65,12 @@ z = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
 data = np.zeros((4, NUM_POINTS_ON_VIEW))
 colors = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
 cmap = plt.colormaps['viridis']
-norm = mcolors.Normalize(vmin=0, vmax=MAX_DIST)
+norm = mcolors.Normalize(vmin=4, vmax=MAX_DIST)
 scat = ax.scatter(x, y, z, c='r', marker='o', edgecolor='none',
                   label='scanned points')
-ax.set_xlim(2.0, 0.0)
-ax.set_ylim(2.0, 0.0)
-ax.set_zlim(-2.0, 2.0)
+ax.set_xlim(6.0, 0.0)
+ax.set_ylim(6.0, 0.0)
+ax.set_zlim(-6.0, 6.0)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')

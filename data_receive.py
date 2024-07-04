@@ -29,10 +29,10 @@ def process_data(data_frame: bytes):
     # print(data_frame)
     fast_axis_angle = (int.from_bytes(data_frame[1:2]) + int.from_bytes(data_frame[2:3]) * 256) / 4 / 4096 * 3.3
     slow_axis_angle = (int.from_bytes(data_frame[3:4]) + int.from_bytes(data_frame[4:5]) * 256) / 4 / 4096 * 3.3
-    dist = int.from_bytes(data_frame[5:6]) + int.from_bytes(data_frame[6:7])
+    dist = int.from_bytes(data_frame[5:6]) + int.from_bytes(data_frame[6:7]) * 256
 
-    fast_axis_angle = (fast_axis_angle - 1.65) / 2.475 * np.pi / 12.0
-    slow_axis_angle = (slow_axis_angle - 1.65) / 2.475 * np.pi / 12.0
+    fast_axis_angle = (fast_axis_angle - 1.65) / 2.475 * np.pi / 2 + np.pi / 4
+    slow_axis_angle = (slow_axis_angle - 1.65) / 2.475 * np.pi / 2
     dist = dist / 100.0
 
     return fast_axis_angle, slow_axis_angle, dist
