@@ -35,8 +35,6 @@ def read_data():
         y.append(y_data)
         z.append(z_data)
 
-        data = np.vstack([np.array(x), np.array(y), np.array(z), np.array(colors)])
-
 
 def update_figure(frame):
     """
@@ -44,7 +42,11 @@ def update_figure(frame):
     :param frame: one frame for the figure
     :return: updated artists
     """
-    scat.set_color(cmap(norm(data[3])))  # update the color of each scattered point
+    global data
+    data = np.vstack([np.array(x), np.array(y), np.array(z), np.array(colors)])
+
+    scat.set_color(cmap(norm(data[3])))  # update the color of each scattered
+    # point
     scat._offsets3d = data[:3]
     bm.update()
     return [scat, ]
@@ -60,7 +62,7 @@ fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
 x = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
 y = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
 z = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
-data = None
+data = np.zeros((4, NUM_POINTS_ON_VIEW))
 colors = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
 cmap = plt.colormaps['viridis']
 norm = mcolors.Normalize(vmin=0, vmax=MAX_DIST)
