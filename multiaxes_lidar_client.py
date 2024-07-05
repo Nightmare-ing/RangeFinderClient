@@ -15,7 +15,6 @@ def read_data():
     """
     thread function for pushing one frame data into the deque continuously
     """
-    global data
     while True:
         fast_axis_angle, slow_axis_angle, dist = get_data(ser)
         # fast_axis_angle = np.random.uniform(0.0, 2 * np.pi)
@@ -30,10 +29,7 @@ def read_data():
         y_data = dist * np.cos(slow_axis_angle) * np.cos(fast_axis_angle)
         z_data = dist * np.sin(slow_axis_angle)
 
-        colors.append(dist)
-        x.append(x_data)
-        y.append(y_data)
-        z.append(z_data)
+        data_deque.append([x_data, y_data, z_data, dist])
 
 
 def update_figure(frame):
@@ -43,10 +39,10 @@ def update_figure(frame):
     :return: updated artists
     """
     global data
-    data = np.vstack([np.array(x), np.array(y), np.array(z), np.array(colors)])
+    data = np.array(data_deque).transpose()
 
-    scat.set_color(cmap(norm(data[3])))  # update the color of each scattered
-    # point
+    # update the color of each scattered point
+    scat.set_color(cmap(norm(data[3])))
     scat._offsets3d = data[:3]
     bm.update()
     return [scat, ]
@@ -59,14 +55,13 @@ ser = serial.Serial('/dev/tty.usbserial-13340', 3000000, timeout=1)
 fig, ax = plt.subplots(layout='constrained', subplot_kw=dict(
     projection='3d'))
 
-x = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
-y = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
-z = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
-data = np.zeros((4, NUM_POINTS_ON_VIEW))
-colors = deque([0.0] * NUM_POINTS_ON_VIEW, maxlen=NUM_POINTS_ON_VIEW)
+data_deque = deque([[0.0, 0.0, 0.0, 0.0]] * NUM_POINTS_ON_VIEW,
+                   maxlen=NUM_POINTS_ON_VIEW)
+data = np.array(data_deque).transpose()
 cmap = plt.colormaps['viridis']
 norm = mcolors.Normalize(vmin=4, vmax=MAX_DIST)
-scat = ax.scatter(x, y, z, c='r', marker='o', edgecolor='none',
+scat = ax.scatter(data[0], data[1], data[2], c='r', marker='o',
+                  edgecolor='none',
                   label='scanned points')
 ax.set_xlim(6.0, 0.0)
 ax.set_ylim(6.0, 0.0)
